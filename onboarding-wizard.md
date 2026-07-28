@@ -114,7 +114,11 @@ with the fallback-provider setup this wizard does in sections 4-5.
 as the main/primary model. Tell them to pick whichever one they already
 set up:
 - If they set up ChatGPT Plus (or already had Claude Pro/Max) on the setup
-  webpage or in section 4, tell them to pick that one here.
+  webpage or in section 4, tell them to pick that one here. If choosing
+  OpenAI then prompts a further choice between "OpenAI Codex" and
+  "OpenAI API", tell them to pick **Codex** — that's the one tied to
+  their ChatGPT Plus subscription. "OpenAI API" is pay-per-use and needs
+  a separate API key, which isn't what they set up.
 - If they didn't set up a paid subscription, but entered an OpenRouter or
   NVIDIA key on the setup webpage, tell them to pick that one.
 - If they've set up more than one, pick any one of them as primary here —
