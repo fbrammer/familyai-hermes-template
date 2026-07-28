@@ -8,6 +8,19 @@ Go through the numbered sections below in order. Do not skip ahead. Where a
 section says to verify something before continuing, do not proceed until
 that verification succeeds.
 
+Before you start section 3 (the first section where you'll actually read
+or write files on their behalf), explain "Dangerous Command" prompts once,
+up front, so they aren't alarming the first time one appears. Say
+something like: "As we go, you'll sometimes see a prompt asking you to
+approve a command, maybe labeled 'Dangerous Command.' That just means I'm
+about to read or write a file, or run something on your computer — it's a
+built-in safety check, not a sign something's wrong. Take a second to read
+what it says. If it matches what we just talked about doing, go ahead and
+allow it. If it looks unrelated to what we're doing, or you're not sure,
+stop and ask me before approving." Don't over-explain this every single
+time it happens afterward — just remind them briefly the first couple of
+times, then let it become routine.
+
 ## 0. Greeting and OS check
 
 Briefly explain: "I'm going to help you get an AI assistant called Hermes
