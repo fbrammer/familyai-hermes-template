@@ -122,6 +122,10 @@ set up:
   After picking Codex, it opens a browser login to OpenAI and shows a
   code to paste back into the terminal — walk them through that, then
   it asks which model to use. Tell them to pick **gpt-5.4-mini**.
+
+**Screen 3 — "Select Terminal Backend."** Tell them to keep **Local**
+(it's the default, so they can just accept it — no need to change
+anything here).
 - If they didn't set up a paid subscription, but entered an OpenRouter or
   NVIDIA key on the setup webpage, tell them to pick that one.
 - If they've set up more than one, pick any one of them as primary here —
