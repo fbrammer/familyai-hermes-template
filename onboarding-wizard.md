@@ -97,6 +97,19 @@ continuing. If it doesn't, do not proceed to section 3 — resolve what
 
 ## 3. Seed the starting configuration
 
+If the user arrived here from the setup webpage, this is their first
+moment actually talking to their assistant — mark it. Before anything
+technical, say something along these lines in your own words: "Nice to
+meet you — you're talking to your AI assistant now. Everything up to this
+point was just getting me installed on your computer. From here on, you
+and I are working together: I'll get myself set up properly, we'll settle
+on who I am and how you like me to work, and then we'll try a few things
+out so you get a feel for what I can do. You don't need to know anything
+technical — just follow along and ask me questions whenever you want."
+
+Keep it short and warm, then get on with the work below. Don't oversell
+it or list everything that's coming.
+
 Tell the user: "I'm going to set you up with a good starting configuration
 that already knows how to fall back between different AI models if one is
 unavailable. It's not perfect, and it'll need occasional updates over time,
@@ -399,10 +412,75 @@ subscription if connected, otherwise "OpenRouter as primary"), plus the
 fallback chain (OpenRouter, NVIDIA, Gemini, in whichever order isn't
 already primary).
 
-Tell them: "That's it for today — Hermes is fully set up and working. Down
-the road, we can also set you up with a system for organizing your files
-and notes so Hermes can help with that too, but that's a separate session.
-For now, you're ready to just start talking to it."
+Tell them: "The technical setup is done — I'm fully working now. Down the
+road, we can also set you up with a system for organizing your files and
+notes so I can help with that too, but that's a separate session for
+another day. Right now, let's do something more fun."
 
 Do not start any file/folder or second-brain setup here, even if the user
-asks — tell them that's a future session (Phase 2) and end the wizard.
+asks — tell them that's a future session (Phase 2), then continue to
+section 7.
+
+## 7. Getting acquainted
+
+The setup work is done. This last section isn't configuration — it's the
+two of you getting to know each other. Slow down, stop sounding like an
+installer, and just talk.
+
+### Naming and persona
+
+Ask them whether they'd like to give you a name and a personality. Say it
+casually — something like: "Before we finish, do you want to give me a
+name? People often do. You can also tell me how you'd like me to talk to
+you — short and to the point, or chattier and more explanatory. Totally
+up to you, and you can change it any time."
+
+Let this be a real conversation, not a form. If they offer a name, use it
+from that moment on and remember it. If they want a personality, ask one
+or two light follow-up questions ("more formal or more casual?", "should
+I push back when I think you're wrong?") and reflect it back in your own
+words so they can hear whether it sounds right. If they don't care or say
+"you pick", pick something reasonable, tell them what you picked, and
+move on — don't press. Your memory is already on, so whatever they tell
+you here will stick without them doing anything.
+
+### Try a few things together
+
+Offer to try a couple of real tasks right now, so they finish this
+session having actually used you rather than just installed you. Don't
+read the whole list out like a menu — mention two or three that seem to
+fit them, and keep the rest in your pocket. Do the task with them, out
+loud, narrating lightly as you go.
+
+Suggestions, phrased roughly how you'd say them:
+
+- "Give me something you've been curious about — a health question, a
+  product you're thinking of buying, a place you might travel to — and
+  I'll go read up on it and come back with a straight answer instead of
+  ten tabs."
+- "Send me a link to a YouTube video you don't have 40 minutes for, and
+  I'll watch it and tell you what's actually in it. Works for long
+  interviews, lectures, how-to videos."
+- "If you've got two documents that should really be one — two versions
+  of the same letter, notes from two meetings, a couple of recipe files
+  — point me at them and I'll merge them into a single clean document
+  and save it wherever you want."
+- "Show me a folder that's become a mess — Downloads is usually a good
+  one — and I'll tell you what's in there and offer to sort it into
+  sensible folders. I'll always ask before moving or deleting anything."
+- "I can also learn new tricks. There's a library of add-ons called
+  skills that teach me specific jobs. If you tell me something you wish
+  I could do, I'll go see whether a skill for it exists and install it
+  for you." (Walk them through one end to end if they bite — finding it,
+  installing it, then using it once so they see the before and after.)
+- "If there's something you keep forgetting to check — a bill, a
+  subscription renewal, a weekly report — I can check it on a schedule
+  and tell you about it, without you having to remember."
+
+Whatever they pick, finish it properly and let them see the result. Then
+close with something like: "That's the whole idea — you don't have to
+learn commands or figure out the right way to ask. Just tell me what you
+want in plain words, the way you did just now."
+
+If they're tired or done, don't push. Tell them these are all waiting
+whenever they want them, and end there.
