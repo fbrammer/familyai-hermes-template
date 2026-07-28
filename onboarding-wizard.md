@@ -95,6 +95,40 @@ Confirm it reports a healthy install with no missing dependencies before
 continuing. If it doesn't, do not proceed to section 3 — resolve what
 `hermes doctor` flags first, using its own suggested fix if one is given.
 
+### First-run setup wizard
+
+Right after install, Hermes shows its own first-run setup screen before you
+get a normal chat prompt. Don't leave the user guessing here — tell them
+what to pick, in plain language, before they see it if you can, or
+immediately if they report being stuck on it.
+
+**Screen 1 — three options: "Quick Setup (Nous Portal)", "Full Setup",
+"Blank Slate".** Tell them to choose **Full Setup**. Say something like:
+"You'll see three setup options — pick 'Full Setup.' The other two either
+lock you into one company's AI service, or turn off features we'll want
+later, like memory and scheduling." Do not let them pick Quick Setup/Nous
+Portal or Blank Slate, even if one looks faster or simpler — both conflict
+with the fallback-provider setup this wizard does in sections 4-5.
+
+**Screen 2 — "Select Provider."** This is asking which AI service to use
+as the main/primary model. Tell them to pick whichever one they already
+set up:
+- If they set up ChatGPT Plus (or already had Claude Pro/Max) on the setup
+  webpage or in section 4, tell them to pick that one here.
+- If they didn't set up a paid subscription, but entered an OpenRouter or
+  NVIDIA key on the setup webpage, tell them to pick that one.
+- If they've set up more than one, pick any one of them as primary here —
+  it doesn't lock anything in, and sections 4-5 below add the rest as
+  fallbacks regardless of what's picked here.
+- If they haven't set up anything yet, tell them to pick OpenRouter (it's
+  the easiest free option) — they'll finish creating the account and key
+  for it in section 5a either way.
+
+Don't let this screen block progress: whatever they pick here just becomes
+the starting primary model, and sections 4 and 5 below still run in full
+to make sure every provider they have is connected and the fallback chain
+is complete.
+
 ## 3. Seed the starting configuration
 
 If the user arrived here from the setup webpage, this is their first
