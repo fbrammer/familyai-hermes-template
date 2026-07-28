@@ -298,8 +298,18 @@ working."
 
 ## 4. Check for an existing paid subscription
 
-Ask: "Do you already pay for ChatGPT Plus, Claude Pro, or a similar AI
-subscription?"
+If the user arrived here from the setup webpage, they may have already
+decided about a ChatGPT Plus subscription there (the page only handles
+the account/subscription decision — it can't do the actual login, since
+that needs you, running live). Ask: "Did you already set up ChatGPT Plus
+on the setup page, or do you have Claude Pro, Max, or a similar AI
+subscription already?" If they say they set up ChatGPT Plus on the
+webpage, treat that the same as a "yes" below and go straight to
+`hermes auth add openai-codex` — don't make them re-decide, just connect
+it.
+
+If they didn't come from the webpage, ask plainly: "Do you already pay
+for ChatGPT Plus, Claude Pro, or a similar AI subscription?"
 
 ### If yes:
 Run the matching command for what they have:
@@ -326,13 +336,27 @@ paid subscription.
 
 ## 5. Set up free model providers
 
-Explain once, before starting: "Now I'll help you set up three free AI
-providers as backups. For each one, you'll create a free account and get an
-API key — think of it like a password just for this app. I'll also suggest
-adding $10 in credits to each; this isn't required to use the free models,
-but having any billing history on the account makes the free tier much more
-reliable and less likely to get rate-limited. You're not spending that $10
-unless you choose to use paid models later."
+If the user arrived here from the setup webpage, they may have already
+entered OpenRouter and/or NVIDIA keys there and run the `hermes config
+set` commands themselves right after installing. Check first, for each
+provider, before assuming anything needs setting up:
+```
+hermes config get OPENROUTER_API_KEY
+hermes config get NVIDIA_API_KEY
+```
+If a value comes back (not empty/blank), that provider is already
+configured — skip straight to its **Verify** step below, don't re-do
+signup or key entry. If it's blank, run that provider's full steps as
+written.
+
+Explain once, before starting whatever's left: "Now I'll help you finish
+setting up your free AI providers as backups. For each one you haven't
+already done, you'll create a free account and get an API key — think of
+it like a password just for this app. I'll also suggest adding $10 in
+credits to each; this isn't required to use the free models, but having
+any billing history on the account makes the free tier much more
+reliable and less likely to get rate-limited. You're not spending that
+$10 unless you choose to use paid models later."
 
 ### 5a. OpenRouter
 1. Have them go to https://openrouter.ai and sign up for a free account.
@@ -384,7 +408,7 @@ Once all three verifications pass, tell the user: "You now have three
 backup AI providers set up, plus [their OAuth subscription, if connected].
 If one ever stops working, Hermes will automatically try the next one."
 
-## 5b. Quiet down automatic memory
+## 5d. Quiet down automatic memory
 
 Tell the user: "One more thing — Hermes actually remembers things about you
 and your setup automatically as you go. You don't need to ask it to
