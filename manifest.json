@@ -1,0 +1,194 @@
+{
+  "sections": {
+    "fallback_providers": [
+      {
+        "provider": "nvidia",
+        "model": "z-ai/glm-5.2"
+      },
+      {
+        "provider": "google",
+        "model": "gemini-3.6-flash"
+      },
+      {
+        "provider": "openrouter",
+        "model": "nvidia/nemotron-3-ultra-550b-a55b:free"
+      },
+      {
+        "provider": "google",
+        "model": "gemini-3.5-flash"
+      },
+      {
+        "provider": "nvidia",
+        "model": "deepseek-ai/deepseek-v4-flash"
+      },
+      {
+        "provider": "google",
+        "model": "gemini-3.1-flash-lite"
+      },
+      {
+        "provider": "openrouter",
+        "model": "poolside/laguna-m.1:free"
+      },
+      {
+        "provider": "google",
+        "model": "gemini-2.5-flash"
+      },
+      {
+        "provider": "nvidia",
+        "model": "nvidia/llama-3.3-nemotron-super-49b-v1"
+      },
+      {
+        "provider": "google",
+        "model": "gemini-2.5-flash-lite"
+      },
+      {
+        "provider": "openrouter",
+        "model": "nvidia/nemotron-3-super-120b-a12b:free"
+      },
+      {
+        "provider": "google",
+        "model": "gemini-2.0-flash"
+      },
+      {
+        "provider": "nvidia",
+        "model": "minimaxai/minimax-m3"
+      },
+      {
+        "provider": "openrouter",
+        "model": "google/gemma-4-31b-it:free"
+      },
+      {
+        "provider": "nvidia",
+        "model": "nvidia/nemotron-3-super-120b-a12b"
+      },
+      {
+        "provider": "nvidia",
+        "model": "stepfun-ai/step-3.7-flash"
+      }
+    ],
+    "auxiliary": {
+      "vision": {
+        "provider": "google",
+        "model": "gemini-3.6-flash",
+        "timeout": 120,
+        "reasoning_effort": "low",
+        "download_timeout": 30
+      },
+      "web_extract": {
+        "provider": "google",
+        "model": "gemini-3.5-flash",
+        "timeout": 360,
+        "reasoning_effort": "low"
+      },
+      "compression": {
+        "provider": "google",
+        "model": "gemini-3.1-flash-lite",
+        "timeout": 120,
+        "reasoning_effort": "low"
+      },
+      "skills_hub": {
+        "provider": "google",
+        "model": "gemini-2.5-flash",
+        "timeout": 30
+      },
+      "approval": {
+        "provider": "google",
+        "model": "gemini-2.5-flash-lite",
+        "timeout": 30
+      },
+      "mcp": {
+        "provider": "google",
+        "model": "gemini-2.0-flash",
+        "timeout": 30
+      },
+      "title_generation": {
+        "provider": "google",
+        "model": "gemini-3.6-flash",
+        "timeout": 30,
+        "reasoning_effort": "",
+        "language": "English"
+      },
+      "tts_audio_tags": {
+        "provider": "google",
+        "model": "gemini-3.5-flash",
+        "timeout": 30
+      },
+      "triage_specifier": {
+        "provider": "google",
+        "model": "gemini-3.1-flash-lite",
+        "timeout": 120
+      },
+      "kanban_decomposer": {
+        "provider": "google",
+        "model": "gemini-2.5-flash",
+        "timeout": 180
+      },
+      "profile_describer": {
+        "provider": "google",
+        "model": "gemini-2.5-flash-lite",
+        "timeout": 60
+      },
+      "curator": {
+        "provider": "google",
+        "model": "gemini-2.0-flash",
+        "timeout": 600,
+        "reasoning_effort": "low"
+      },
+      "monitor": {
+        "provider": "google",
+        "model": "gemini-3.6-flash",
+        "timeout": 60
+      },
+      "background_review": {
+        "provider": "google",
+        "model": "gemini-3.1-flash-lite",
+        "reasoning_effort": "low"
+      },
+      "session_search": {
+        "provider": "google",
+        "model": "gemini-3.5-flash",
+        "reasoning_effort": "low"
+      }
+    },
+    "delegation": {
+      "model": "",
+      "provider": "",
+      "base_url": "",
+      "api_key": "",
+      "api_mode": "",
+      "inherit_mcp_toolsets": true,
+      "max_iterations": 50,
+      "child_timeout_seconds": 0,
+      "reasoning_effort": "",
+      "max_concurrent_children": 3,
+      "max_spawn_depth": 1,
+      "orchestrator_enabled": false,
+      "subagent_auto_approve": false
+    },
+    "moa": {
+      "default_preset": "default",
+      "presets": {
+        "default": {
+          "reference_models": [
+            {
+              "provider": "nvidia",
+              "model": "z-ai/glm-5.2"
+            },
+            {
+              "provider": "openai-codex",
+              "model": "gpt-5.6-sol"
+            }
+          ],
+          "aggregator": {
+            "provider": "openai-codex",
+            "model": "gpt-5.6-luna"
+          },
+          "max_tokens": 4096,
+          "enabled": true
+        }
+      }
+    }
+  },
+  "exported_at": "2026-07-28T16:53:25Z",
+  "content_hash": "a58a28a2754f83c0bf304b2defa39101da8990c7f2f36a19f7fb64e999880d8c"
+}
