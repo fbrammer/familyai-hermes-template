@@ -178,8 +178,8 @@ later in this wizard, like merging documents, work better from a clean
 folder). Set up a dedicated workspace and a one-click way to launch into
 it.
 
-1. Create a workspace folder: `~/Documents/Hermes` (Mac) or
-   `%USERPROFILE%\Documents\Hermes` (Windows). This is where Hermes will
+1. Create a workspace folder: `~/Documents/AI` (Mac) or
+   `%USERPROFILE%\Documents\AI` (Windows). This is where Hermes will
    run from, and a natural place for the user to keep files they hand to
    their assistant later.
 
@@ -190,7 +190,7 @@ it.
    **Mac** — create `~/Desktop/Start Hermes.command` containing:
    ```bash
    #!/usr/bin/env bash
-   cd ~/Documents/Hermes
+   cd ~/Documents/AI
    hermes update
    hermes
    ```
@@ -206,7 +206,7 @@ it.
    containing:
    ```bat
    @echo off
-   cd /d "%USERPROFILE%\Documents\Hermes"
+   cd /d "%USERPROFILE%\Documents\AI"
    hermes update
    hermes
    ```
@@ -216,7 +216,7 @@ it.
    place and keep itself up to date."
 
 4. For the rest of *this* session, since they're already in a terminal,
-   just have them run `cd ~/Documents/Hermes` (or the Windows equivalent)
+   just have them run `cd ~/Documents/AI` (or the Windows equivalent)
    directly rather than restarting via the launcher — no need to relaunch
    mid-wizard.
 
