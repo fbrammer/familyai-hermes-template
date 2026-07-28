@@ -169,6 +169,57 @@ the starting primary model, and sections 4 and 5 below still run in full
 to make sure every provider they have is connected and the fallback chain
 is complete.
 
+## 2b. Set up a workspace and desktop launcher
+
+By default `hermes` starts in whatever folder the terminal happens to be
+in — usually the user's home directory. That's not a good place for it to
+work day to day (it's cluttered with system/dotfiles, and file-based tasks
+later in this wizard, like merging documents, work better from a clean
+folder). Set up a dedicated workspace and a one-click way to launch into
+it.
+
+1. Create a workspace folder: `~/Documents/Hermes` (Mac) or
+   `%USERPROFILE%\Documents\Hermes` (Windows). This is where Hermes will
+   run from, and a natural place for the user to keep files they hand to
+   their assistant later.
+
+2. Create a launcher on their Desktop that moves to that folder, checks
+   for updates, then starts Hermes — so from now on, starting Hermes is
+   just "double-click the icon on your Desktop."
+
+   **Mac** — create `~/Desktop/Start Hermes.command` containing:
+   ```bash
+   #!/usr/bin/env bash
+   cd ~/Documents/Hermes
+   hermes update
+   hermes
+   ```
+   Make it executable and double-clickable:
+   ```bash
+   chmod +x ~/Desktop/"Start Hermes.command"
+   ```
+   The first time they double-click it, macOS may warn about an
+   unidentified developer — have them right-click the file and choose
+   "Open" instead of double-clicking, just for that first launch.
+
+   **Windows** — create `%USERPROFILE%\Desktop\Start Hermes.bat`
+   containing:
+   ```bat
+   @echo off
+   cd /d "%USERPROFILE%\Documents\Hermes"
+   hermes update
+   hermes
+   ```
+
+3. From here on, tell them: "From now on, just double-click 'Start
+   Hermes' on your desktop to open me — it'll always start in the right
+   place and keep itself up to date."
+
+4. For the rest of *this* session, since they're already in a terminal,
+   just have them run `cd ~/Documents/Hermes` (or the Windows equivalent)
+   directly rather than restarting via the launcher — no need to relaunch
+   mid-wizard.
+
 ## 3. Seed the starting configuration
 
 If the user arrived here from the setup webpage, this is their first
