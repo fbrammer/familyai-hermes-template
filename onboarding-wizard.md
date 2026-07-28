@@ -146,7 +146,9 @@ likely the auxiliary/vision model slot, used for image-related tasks).**
 Tell them to pick whichever provider they already authenticated earlier
 in this same setup (e.g. OpenAI Codex, if that's what they picked at
 Screen 2) — reusing the same provider avoids setting up a second account
-or key mid-install. This can be revisited later if needed.
+or key mid-install. This can be revisited later if needed. If it then
+asks which model tier to use for this slot, accept the **default
+("medium")** — no need to change it for a first-time setup.
 - If they didn't set up a paid subscription, but entered an OpenRouter or
   NVIDIA key on the setup webpage, tell them to pick that one.
 - If they've set up more than one, pick any one of them as primary here —
