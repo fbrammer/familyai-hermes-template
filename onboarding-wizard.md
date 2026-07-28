@@ -126,6 +126,15 @@ set up:
 **Screen 3 — "Select Terminal Backend."** Tell them to keep **Local**
 (it's the default, so they can just accept it — no need to change
 anything here).
+
+**Screen 4 — third-party communication platform setup (e.g. Slack,
+Discord, iMessage).** Tell them to press **Esc** to skip this screen
+entirely. Messaging integration isn't part of this onboarding and picking
+one (especially iMessage, which needs deeper system access) deserves its
+own separate decision later, not a rushed pick mid-install.
+
+**Screen 5 — "Tools for CLI."** Tell them to accept the preselected
+defaults and continue — no changes needed here for a first-time setup.
 - If they didn't set up a paid subscription, but entered an OpenRouter or
   NVIDIA key on the setup webpage, tell them to pick that one.
 - If they've set up more than one, pick any one of them as primary here —
