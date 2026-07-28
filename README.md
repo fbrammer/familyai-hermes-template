@@ -16,4 +16,6 @@ onboarded user's own machine runs daily to keep its config in sync with
 `manifest.json` -- see the FamilyAI project's design spec for the full
 architecture (builder-side publisher -> this repo -> end-user refresher).
 
-Not yet published: `manifest.json` itself (first publish is pending).
+First publish completed 2026-07-28. The weekly publisher cron job runs
+every Sunday at 15:00 (builder's local time) and only writes an update
+when the content actually changed.
