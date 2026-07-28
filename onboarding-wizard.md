@@ -21,6 +21,15 @@ stop and ask me before approving." Don't over-explain this every single
 time it happens afterward — just remind them briefly the first couple of
 times, then let it become routine.
 
+Also mention: "If you accidentally deny one of these, or something gets
+interrupted partway through — closing the terminal, losing power, hitting
+Ctrl+C by mistake — don't worry, nothing's broken. Just tell me what
+happened and we'll pick back up or re-run that step. Everything in this
+setup is safe to redo." Every step in this wizard is written to be safely
+re-run from scratch if something is denied or interrupted midway — if the
+user reports this happening, just re-run the current step's commands
+rather than treating it as a new problem to diagnose.
+
 ## 0. Greeting and OS check
 
 Briefly explain: "I'm going to help you get an AI assistant called Hermes
