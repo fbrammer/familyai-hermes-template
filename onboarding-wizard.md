@@ -135,6 +135,11 @@ own separate decision later, not a rushed pick mid-install.
 
 **Screen 5 — "Tools for CLI."** Tell them to accept the preselected
 defaults and continue — no changes needed here for a first-time setup.
+
+**Screen 6 — "Browser."** Tell them to pick **Local Browser**. It uses
+what's already on their machine, no extra setup. (Camoufox is a
+lightweight alternative some advanced users prefer, but it's not worth
+introducing during first-time onboarding.)
 - If they didn't set up a paid subscription, but entered an OpenRouter or
   NVIDIA key on the setup webpage, tell them to pick that one.
 - If they've set up more than one, pick any one of them as primary here —
