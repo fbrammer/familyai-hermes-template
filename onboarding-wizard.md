@@ -149,6 +149,9 @@ Screen 2) — reusing the same provider avoids setting up a second account
 or key mid-install. This can be revisited later if needed. If it then
 asks which model tier to use for this slot, accept the **default
 ("medium")** — no need to change it for a first-time setup.
+
+**Screen 8 — "TTS" (text-to-speech).** Tell them to keep the recommended
+default, **Microsoft Edge TTS** — it's free and needs no extra setup.
 - If they didn't set up a paid subscription, but entered an OpenRouter or
   NVIDIA key on the setup webpage, tell them to pick that one.
 - If they've set up more than one, pick any one of them as primary here —
