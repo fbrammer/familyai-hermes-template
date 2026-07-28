@@ -119,6 +119,9 @@ set up:
   "OpenAI API", tell them to pick **Codex** — that's the one tied to
   their ChatGPT Plus subscription. "OpenAI API" is pay-per-use and needs
   a separate API key, which isn't what they set up.
+  After picking Codex, it opens a browser login to OpenAI and shows a
+  code to paste back into the terminal — walk them through that, then
+  it asks which model to use. Tell them to pick **gpt-5.4-mini**.
 - If they didn't set up a paid subscription, but entered an OpenRouter or
   NVIDIA key on the setup webpage, tell them to pick that one.
 - If they've set up more than one, pick any one of them as primary here —
