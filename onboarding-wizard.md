@@ -549,6 +549,12 @@ $10 unless you choose to use paid models later."
    ```
    hermes config set GOOGLE_API_KEY their_key_here
    ```
+   Note: if this comes up as one of Hermes's own live setup screens
+   (during `hermes setup`, rather than here in the wizard), it may send
+   them to aistudio.google.com without an obvious way to enter the key
+   back in that screen. If there's no inline paste field, don't get
+   stuck there — just have them come back to a normal prompt afterward
+   and run the `hermes config set` command above manually.
 5. **Verify**: same test-prompt check as 5a/5b.
 
 Once all three verifications pass, tell the user: "You now have three
