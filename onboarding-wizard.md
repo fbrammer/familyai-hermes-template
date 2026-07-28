@@ -152,6 +152,9 @@ asks which model tier to use for this slot, accept the **default
 
 **Screen 8 — "TTS" (text-to-speech).** Tell them to keep the recommended
 default, **Microsoft Edge TTS** — it's free and needs no extra setup.
+
+**Screen 9 — search provider.** Tell them to pick **DuckDuckGo** — it's
+free and doesn't require an API key, unlike most of the other options.
 - If they didn't set up a paid subscription, but entered an OpenRouter or
   NVIDIA key on the setup webpage, tell them to pick that one.
 - If they've set up more than one, pick any one of them as primary here —
