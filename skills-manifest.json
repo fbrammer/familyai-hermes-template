@@ -6,7 +6,8 @@
       "files": [
         "SKILL.md",
         "auto_context_manage.py"
-      ]
+      ],
+      "kind": "skill"
     },
     "auto-journal": {
       "version": "0.1.0",
@@ -14,7 +15,8 @@
       "files": [
         "SKILL.md",
         "auto_journal.py"
-      ]
+      ],
+      "kind": "skill"
     },
     "project-index": {
       "version": "0.1.0",
@@ -22,7 +24,8 @@
       "files": [
         "SKILL.md",
         "project_index.py"
-      ]
+      ],
+      "kind": "skill"
     },
     "session-ledger": {
       "version": "0.1.0",
@@ -32,8 +35,21 @@
         "ledger.py",
         "logging_helper.py",
         "session_end.py"
-      ]
+      ],
+      "kind": "skill"
+    },
+    "update-announcer": {
+      "version": "0.1.0",
+      "sha256": "c8cc5297b2bcec1ca9da79ea178ecd085cba31509f4008f30e9540ed2daf18af",
+      "files": [
+        "SKILL.md",
+        "__init__.py",
+        "plugin.yaml",
+        "update_announcer.py",
+        "update_queue.py"
+      ],
+      "kind": "plugin"
     }
   },
-  "exported_at": "2026-08-04T16:19:02Z"
+  "exported_at": "2026-08-04T17:24:40Z"
 }
