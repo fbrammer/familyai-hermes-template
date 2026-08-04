@@ -1,0 +1,3 @@
+name: update-announcer
+version: "0.1.0"
+description: Tells the user about notable skill updates, once per session, without interrupting their first message.
