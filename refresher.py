@@ -130,6 +130,133 @@ def fetch_manifest(manifest_url: str, http_get=None) -> bytes:
 
 
 # ---------------------------------------------------------------------------
+# Skills pass (novice-UX foundation Task 6)
+# ---------------------------------------------------------------------------
+
+SKILLS_INSTALLED_FILENAME = "skills-installed.json"
+SKILL_BACKUP_RETENTION = 3
+
+
+def _load_skills_installed(path: Path) -> dict:
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return {}
+
+
+def _save_skills_installed(path: Path, data: dict) -> None:
+    path.write_text(json.dumps(data), encoding="utf-8")
+
+
+def install_skill(name: str, files: dict[str, bytes], skills_root: Path) -> None:
+    """Atomically install one skill's files, backing up any prior version.
+
+    Backup happens before any file is touched -- if a prior version
+    exists, it's copied whole to skill-backups/<name>/<timestamp>/ (oldest
+    beyond SKILL_BACKUP_RETENTION pruned) before the live directory is
+    replaced. Each file is written via a same-directory temp file + os.replace.
+    """
+    target_dir = skills_root / name
+
+    if target_dir.exists():
+        backups_dir = skills_root.parent / "skill-backups" / name
+        backups_dir.mkdir(parents=True, exist_ok=True)
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+        shutil.copytree(target_dir, backups_dir / timestamp)
+
+        existing_backups = sorted(backups_dir.iterdir())
+        if len(existing_backups) > SKILL_BACKUP_RETENTION:
+            for old in existing_backups[: len(existing_backups) - SKILL_BACKUP_RETENTION]:
+                shutil.rmtree(old, ignore_errors=True)
+
+        shutil.rmtree(target_dir)
+
+    target_dir.mkdir(parents=True, exist_ok=True)
+    for rel_path, content in files.items():
+        dest = target_dir / rel_path
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        tmp = dest.parent / f".{dest.name}.tmp"
+        tmp.write_bytes(content)
+        os.replace(tmp, dest)
+
+
+def run_skills_pass(
+    hermes_home: str,
+    skills_manifest_url: str,
+    base_raw_url: str,
+    dry_run: bool = False,
+    http_get=None,
+) -> dict:
+    """One skills-refresh cycle: fetch skills-manifest.json, install any changed
+    skill whose files all pass validation, or reject the *whole* pass (no
+    skill installed) if any changed skill fails validation -- matching the
+    existing config-refresher's whole-candidate rejection policy.
+    """
+    home = Path(hermes_home)
+    installed_path = home / SKILLS_INSTALLED_FILENAME
+    skills_root = home / "skills"
+    log_path = home / "logs" / "familyai-refresh.log"
+    http_get = http_get or _default_http_get
+
+    try:
+        raw = http_get(skills_manifest_url)
+        manifest = fcv.parse_manifest(raw)
+    except Exception as e:  # noqa: BLE001 - fetch/parse failure is a normal failure path
+        return {"outcome": Outcome.FAILURE, "reason": f"fetch/parse failed: {e!r}"}
+
+    installed = _load_skills_installed(installed_path)
+
+    changed: dict[str, dict] = {}
+    for name, meta in manifest.get("skills", {}).items():
+        prior = installed.get(name)
+        if prior and prior.get("sha256") == meta.get("sha256"):
+            continue
+        changed[name] = meta
+
+    if not changed:
+        return {"outcome": Outcome.NOOP_STALE_MANIFEST}
+
+    fetched: dict[str, dict[str, bytes]] = {}
+    all_reasons: list[str] = []
+
+    for name, meta in changed.items():
+        files: dict[str, bytes] = {}
+        try:
+            for rel in meta.get("files", []):
+                files[rel] = http_get(f"{base_raw_url.rstrip('/')}/skills/{name}/{rel}")
+        except Exception as e:  # noqa: BLE001 - per-skill fetch failure
+            all_reasons.append(f"{name}: fetch failed: {e!r}")
+            continue
+
+        ok, reasons = fcv.validate_skill_candidate(name, files, meta, installed.get(name))
+        if not ok:
+            all_reasons.extend(reasons)
+        else:
+            fetched[name] = files
+
+    if all_reasons:
+        reason = "; ".join(all_reasons)
+        if not dry_run:
+            _log(log_path, f"skills pass rejected: {reason}")
+        return {"outcome": Outcome.FAILURE, "reason": reason}
+
+    if dry_run:
+        return {"outcome": Outcome.DRY_RUN_WOULD_APPLY, "skills": sorted(fetched)}
+
+    for name, files in fetched.items():
+        install_skill(name, files, skills_root)
+        installed[name] = {
+            "version": changed[name].get("version"),
+            "sha256": changed[name].get("sha256"),
+        }
+
+    _save_skills_installed(installed_path, installed)
+    return {"outcome": Outcome.SUCCESS, "updated": sorted(fetched)}
+
+
+# ---------------------------------------------------------------------------
 # Splice
 # ---------------------------------------------------------------------------
 
@@ -414,16 +541,30 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="FamilyAI Phase 3 end-user refresher")
     parser.add_argument("--hermes-home", required=True)
     parser.add_argument("--manifest-url", default=os.environ.get("FAMILYAI_MANIFEST_URL", ""))
+    parser.add_argument("--skills-manifest-url", default=os.environ.get("FAMILYAI_SKILLS_MANIFEST_URL", ""))
+    parser.add_argument("--skills-raw-base-url", default=os.environ.get("FAMILYAI_SKILLS_RAW_BASE_URL", ""))
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
     try:
         result = run(hermes_home=args.hermes_home, manifest_url=args.manifest_url, dry_run=args.dry_run)
     except Exception:  # noqa: BLE001 - never let anything escape to stdout/stderr on the real path
-        return 0
+        result = {"outcome": Outcome.FAILURE, "reason": "unexpected error in config pass"}
+
+    skills_result = None
+    if args.skills_manifest_url and args.skills_raw_base_url:
+        try:
+            skills_result = run_skills_pass(
+                hermes_home=args.hermes_home,
+                skills_manifest_url=args.skills_manifest_url,
+                base_raw_url=args.skills_raw_base_url,
+                dry_run=args.dry_run,
+            )
+        except Exception:  # noqa: BLE001 - same silence contract as the config pass
+            skills_result = {"outcome": Outcome.FAILURE, "reason": "unexpected error in skills pass"}
 
     if args.dry_run:
-        print(json.dumps(result, indent=2, default=str))
+        print(json.dumps({"config": result, "skills": skills_result}, indent=2, default=str))
     return 0
 
 
