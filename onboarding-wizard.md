@@ -582,6 +582,13 @@ already default to the right values for a hands-off setup (memory on,
 writes automatic with no approval prompts). This step only silences the
 chat notification, nothing about how memory itself works.
 
+Also mention, in the same breath: "I also keep my own working notes as we
+go — things like what we decided and what we did — so I can pick up where
+we left off next time, even across separate sessions. They live in a
+folder on your computer at `~/.hermes/familyai/journal/`, you never have
+to manage them, and if you ever want to see them, read them, or turn the
+whole thing off, just ask me."
+
 ## 6. Wrap-up
 
 Summarize for the user what's now configured: their primary model (OAuth
