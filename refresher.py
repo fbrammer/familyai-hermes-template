@@ -38,6 +38,9 @@ from ruamel.yaml import YAML
 
 import familyai_config_validate as fcv
 
+sys.path.insert(0, str(Path(__file__).resolve().parent / "skills"))
+import update_queue  # noqa: E402 - path must be set up first
+
 MANAGED_SECTIONS = ("fallback_providers", "auxiliary", "delegation", "moa")
 MARKER_FILENAME = ".familyai-template-synced-at"
 LOCK_FILENAME = ".familyai-refresh.lock"
@@ -150,18 +153,31 @@ def _save_skills_installed(path: Path, data: dict) -> None:
     path.write_text(json.dumps(data), encoding="utf-8")
 
 
-def install_skill(name: str, files: dict[str, bytes], skills_root: Path) -> None:
-    """Atomically install one skill's files, backing up any prior version.
+def install_skill(name: str, files: dict[str, bytes], skills_root: Path, kind: str = "skill", hermes_home: Path | None = None) -> None:
+    """Atomically install one skill's (or plugin's) files, backing up any
+    prior version.
+
+    kind == "skill" (default): installs to skills_root/<name>, backs up to
+    skills_root.parent/skill-backups/<name>/. kind == "plugin": installs to
+    hermes_home/plugins/<name> instead, backs up to
+    hermes_home/plugin-backups/<name>/, and -- after the files are in
+    place -- ensures the plugin is enabled via plugins.enabled in
+    config.yaml (plugins are opt-in in Hermes; dropping the files alone
+    does not activate them).
 
     Backup happens before any file is touched -- if a prior version
-    exists, it's copied whole to skill-backups/<name>/<timestamp>/ (oldest
+    exists, it's copied whole to <backups_dir>/<name>/<timestamp>/ (oldest
     beyond SKILL_BACKUP_RETENTION pruned) before the live directory is
     replaced. Each file is written via a same-directory temp file + os.replace.
     """
-    target_dir = skills_root / name
+    if kind == "plugin":
+        target_dir = hermes_home / "plugins" / name
+        backups_dir = hermes_home / "plugin-backups" / name
+    else:
+        target_dir = skills_root / name
+        backups_dir = skills_root.parent / "skill-backups" / name
 
     if target_dir.exists():
-        backups_dir = skills_root.parent / "skill-backups" / name
         backups_dir.mkdir(parents=True, exist_ok=True)
         timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
         shutil.copytree(target_dir, backups_dir / timestamp)
@@ -180,6 +196,47 @@ def install_skill(name: str, files: dict[str, bytes], skills_root: Path) -> None
         tmp = dest.parent / f".{dest.name}.tmp"
         tmp.write_bytes(content)
         os.replace(tmp, dest)
+
+    if kind == "plugin":
+        _enable_plugin(hermes_home, name)
+
+
+def _enable_plugin(hermes_home: Path, name: str) -> None:
+    """Idempotently ensure `name` is in config.yaml's plugins.enabled list.
+
+    Never touches plugins.disabled or any other key. A ruamel round-trip,
+    same pattern already used for the config-section splice -- this is a
+    structural list append to trusted, builder-controlled data (the plugin
+    name we just installed), not untrusted content, so it doesn't need the
+    isolated-HERMES_HOME validate_candidate/hermes-config-check pipeline
+    the config-section pass uses.
+    """
+    config_path = hermes_home / "config.yaml"
+    if not config_path.exists():
+        return
+
+    yaml = YAML(typ="rt")
+    with open(config_path, "r", encoding="utf-8") as f:
+        config = yaml.load(f)
+
+    if config is None:
+        return
+
+    plugins_section = config.get("plugins")
+    if plugins_section is None:
+        plugins_section = {}
+        config["plugins"] = plugins_section
+
+    enabled = plugins_section.get("enabled")
+    if enabled is None:
+        enabled = []
+        plugins_section["enabled"] = enabled
+
+    if name not in enabled:
+        enabled.append(name)
+
+    with open(config_path, "w", encoding="utf-8") as f:
+        yaml.dump(config, f)
 
 
 def run_skills_pass(
@@ -223,9 +280,10 @@ def run_skills_pass(
 
     for name, meta in changed.items():
         files: dict[str, bytes] = {}
+        source_prefix = "plugins" if meta.get("kind") == "plugin" else "skills"
         try:
             for rel in meta.get("files", []):
-                files[rel] = http_get(f"{base_raw_url.rstrip('/')}/skills/{name}/{rel}")
+                files[rel] = http_get(f"{base_raw_url.rstrip('/')}/{source_prefix}/{name}/{rel}")
         except Exception as e:  # noqa: BLE001 - per-skill fetch failure
             all_reasons.append(f"{name}: fetch failed: {e!r}")
             continue
@@ -246,11 +304,23 @@ def run_skills_pass(
         return {"outcome": Outcome.DRY_RUN_WOULD_APPLY, "skills": sorted(fetched)}
 
     for name, files in fetched.items():
-        install_skill(name, files, skills_root)
+        prior_meta = installed.get(name)  # None means this skill is being installed for the first time
+        kind = changed[name].get("kind", "skill")
+        install_skill(name, files, skills_root, kind=kind, hermes_home=home)
         installed[name] = {
             "version": changed[name].get("version"),
             "sha256": changed[name].get("sha256"),
         }
+
+        whats_new = changed[name].get("whats_new")
+        if prior_meta is not None and whats_new:
+            update_queue.append_pending_update(
+                home / "familyai",
+                skill=name,
+                from_version=prior_meta.get("version"),
+                to_version=changed[name].get("version"),
+                blurb=whats_new,
+            )
 
     _save_skills_installed(installed_path, installed)
     return {"outcome": Outcome.SUCCESS, "updated": sorted(fetched)}
