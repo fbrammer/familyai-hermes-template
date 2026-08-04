@@ -20,6 +20,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from pathlib import Path
 from typing import Any
 
 try:
@@ -355,6 +356,80 @@ def _reject_json_duplicates(pairs: list[tuple[str, Any]]) -> dict:
             raise ManifestError(f"duplicate key '{key}' in manifest JSON")
         seen[key] = value
     return seen
+
+
+# ---------------------------------------------------------------------------
+# Skills pass (novice-UX foundation Task 6): refresher-side skill validation
+# ---------------------------------------------------------------------------
+
+MAX_SKILL_FILE_BYTES = 64 * 1024
+
+
+def _version_tuple(version: str) -> tuple[int, ...]:
+    """Parse a dotted version string ('0.1.0') into a comparable int tuple."""
+    try:
+        return tuple(int(part) for part in str(version).split("."))
+    except (ValueError, AttributeError) as e:
+        raise ValueError(f"invalid version string: {version!r}") from e
+
+
+def validate_skill_candidate(
+    name: str,
+    files: dict[str, bytes],
+    meta: dict,
+    installed_meta: dict | None,
+) -> tuple[bool, list[str]]:
+    """Consumer policy for one skill: any violation rejects this candidate.
+
+    Called once per changed skill before ANY skill in the pass is
+    installed -- refresher.py aggregates violations across every changed
+    skill and rejects the whole day's skills pass if any single skill
+    fails here, matching the existing config-refresher's whole-candidate
+    rejection policy (never partially apply a batch).
+    """
+    reasons: list[str] = []
+
+    for rel_path, content in files.items():
+        parts = Path(rel_path).parts
+        if rel_path.startswith("/") or ".." in parts:
+            reasons.append(f"{name}/{rel_path}: path-traversal-shaped filename rejected")
+            continue
+        if len(content) > MAX_SKILL_FILE_BYTES:
+            reasons.append(f"{name}/{rel_path}: exceeds {MAX_SKILL_FILE_BYTES}-byte cap")
+
+    version = meta.get("version")
+    if not version:
+        reasons.append(f"{name}: manifest entry missing required 'version'")
+    else:
+        try:
+            new_version = _version_tuple(version)
+        except ValueError as e:
+            reasons.append(f"{name}: {e}")
+            new_version = None
+        if new_version is not None and installed_meta and installed_meta.get("version"):
+            try:
+                old_version = _version_tuple(installed_meta["version"])
+                if new_version <= old_version:
+                    reasons.append(
+                        f"{name}: version {version} is not strictly newer than "
+                        f"installed {installed_meta['version']}"
+                    )
+            except ValueError:
+                pass  # unparseable installed version is not this candidate's problem
+
+    skill_md = files.get("SKILL.md")
+    if skill_md is None:
+        reasons.append(f"{name}: SKILL.md missing from candidate")
+    else:
+        try:
+            text = skill_md.decode("utf-8")
+        except UnicodeDecodeError:
+            reasons.append(f"{name}: SKILL.md is not valid UTF-8")
+            text = ""
+        if "familyai_version:" not in text:
+            reasons.append(f"{name}: SKILL.md missing required frontmatter familyai_version")
+
+    return (len(reasons) == 0, reasons)
 
 
 def parse_manifest(raw_bytes: bytes) -> dict:
