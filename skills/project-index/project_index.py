@@ -1,10 +1,13 @@
 from __future__ import annotations
 
 import json
+import os
 import pathlib
 import re
 from dataclasses import dataclass
 from typing import Any, List, Tuple
+
+from update_queue import append_pending_update
 
 
 class UnreliableIndexError(Exception):
@@ -225,6 +228,155 @@ def move_created_paths(
         move_fn(path)
 
     return created_paths
+
+
+_SKIP_DIRS = {".git", ".obsidian", ".trash", ".archive", ".backup",
+              "node_modules", ".venv", "venv", "__pycache__",
+              "FILE-IN", "FILE-OUT"}
+
+_INDEX_NAMES = {"ROUTING.md", "AGENT.md", "CLAUDE.md", "README.md",
+                "index.md", "INDEX.md", "JOURNAL.md", "MEMORY.md"}
+
+_WIKILINK_RE = re.compile(r"\[\[([^\]\|#]+)")
+_MDLINK_RE = re.compile(r"\]\(([^)]+)\)")
+
+
+def _basenames(token: str) -> set:
+    b = os.path.basename(token.split("#")[0].strip())
+    out = {b}
+    if b.endswith(".md"):
+        out.add(b[:-3])
+    else:
+        out.add(b + ".md")
+    return out
+
+
+def find_unindexed_files(roots: List[str]) -> List[dict]:
+    results: List[dict] = []
+
+    for root in roots:
+        root_path = pathlib.Path(root)
+        if not root_path.exists():
+            continue
+
+        all_files = []   # (dirpath, filename)
+        referenced = set()
+        md_texts = []
+
+        for dirpath, dirnames, filenames in os.walk(root):
+            dirnames[:] = [d for d in dirnames
+                           if d not in _SKIP_DIRS and not d.startswith(".")]
+            if dirpath != root and os.path.isdir(os.path.join(dirpath, ".git")):
+                dirnames[:] = []
+                continue
+            for f in filenames:
+                if f.startswith("."):
+                    continue
+                all_files.append((dirpath, f))
+                if f.endswith(".md"):
+                    try:
+                        text = open(os.path.join(dirpath, f),
+                                    encoding="utf-8", errors="ignore").read()
+                    except OSError:
+                        continue
+                    md_texts.append(text)
+                    for m in _WIKILINK_RE.findall(text):
+                        referenced |= _basenames(m)
+                    for m in _MDLINK_RE.findall(text):
+                        referenced |= _basenames(m)
+
+        all_md_text = "\n".join(md_texts)
+
+        for dirpath, f in all_files:
+            if f in _INDEX_NAMES or f.endswith("_index.md"):
+                continue
+            if f.endswith(".md"):
+                if f in referenced or f[:-3] in referenced:
+                    continue
+            else:
+                if f in referenced or f in all_md_text:
+                    continue
+
+            router_path = os.path.join(dirpath, "ROUTING.md")
+            has_router = os.path.isfile(router_path)
+            results.append({
+                "path": os.path.join(dirpath, f),
+                "folder": dirpath,
+                "filename": f,
+                "kind": "simple" if has_router else "complex",
+                "router_path": router_path if has_router else None,
+            })
+
+    return results
+
+
+_AUTO_SECTION_HEADING = "## Unindexed files (auto-added)"
+
+
+def apply_simple_fix(result: dict) -> None:
+    router_path = pathlib.Path(result["router_path"])
+    filename = result["filename"]
+    content = router_path.read_text() if router_path.exists() else ""
+
+    already_present = bool(
+        re.search(r"\[\[" + re.escape(filename) + r"(\||\])", content)
+        or re.search(r"\]\([^)]*" + re.escape(filename) + r"\)", content)
+        or re.search(r"(?<![\w.-])" + re.escape(filename) + r"(?![\w.-])", content)
+    )
+    if already_present:
+        return  # already present somewhere in the router; nothing to do
+
+    if filename.endswith(".md"):
+        entry_line = f"- [[{filename}]]"
+    else:
+        entry_line = f"- {filename}"
+
+    if _AUTO_SECTION_HEADING in content:
+        content = content.rstrip("\n") + f"\n{entry_line}\n"
+    else:
+        content = content.rstrip("\n") + f"\n\n{_AUTO_SECTION_HEADING}\n{entry_line}\n"
+
+    router_path.write_text(content)
+
+
+def queue_complex_cases(results: List[dict], base_dir: pathlib.Path) -> int:
+    by_folder: dict = {}
+    for r in results:
+        if r["kind"] != "complex":
+            continue
+        by_folder.setdefault(r["folder"], []).append(r["filename"])
+
+    for folder, filenames in by_folder.items():
+        if len(filenames) == 1:
+            blurb = f"Some files in {folder} aren't organized yet ({filenames[0]})."
+        else:
+            blurb = f"Some files in {folder} aren't organized yet ({len(filenames)} files)."
+        append_pending_update(
+            base_dir=base_dir,
+            skill="project-index",
+            from_version="",
+            to_version="",
+            blurb=blurb,
+        )
+
+    return len(by_folder)
+
+
+def run_weekly_indexing_check(roots: List[str], base_dir: pathlib.Path) -> dict:
+    """Entry point for the weekly indexing check: find unindexed files, silently
+    auto-fix the simple cases, and queue the complex cases for the next digest.
+    Intended to run alongside reconcile() on the same weekly cadence."""
+    results = find_unindexed_files(roots)
+
+    simple_fixed = 0
+    for r in results:
+        if r["kind"] == "simple":
+            apply_simple_fix(r)
+            simple_fixed += 1
+
+    complex_queued = queue_complex_cases(results, base_dir)
+
+    return {"simple_fixed": simple_fixed, "complex_folders_queued": complex_queued}
 
 
 def reconcile(
