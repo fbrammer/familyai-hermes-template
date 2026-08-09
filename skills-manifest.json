@@ -20,10 +20,11 @@
     },
     "project-index": {
       "version": "0.1.0",
-      "sha256": "236137177eecc7033e1f619ac7e8c21a7974acc8d1235ab754545eccc2daa0de",
+      "sha256": "78f6dc0c07793fe8dad0a7d9b9f04f08e0e600de0053a81224726aac10bb825f",
       "files": [
         "SKILL.md",
-        "project_index.py"
+        "project_index.py",
+        "update_queue.py"
       ],
       "kind": "skill"
     },
@@ -51,5 +52,5 @@
       "kind": "plugin"
     }
   },
-  "exported_at": "2026-08-04T17:24:40Z"
+  "exported_at": "2026-08-09T19:00:09Z"
 }
