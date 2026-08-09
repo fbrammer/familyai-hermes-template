@@ -24,3 +24,11 @@ partially. Every operation that creates or moves files gets a small
 manifest recording what happened, so a user's correction ("no, that's for
 the other project") can move only what was actually created, without
 touching files the user already owned or reversing anything external.
+
+## Weekly indexing check
+
+Alongside the existing reconciliation pass, `run_weekly_indexing_check()` scans the user's approved
+roots for files not yet named in any `ROUTING.md`. Files in a folder that already has a `ROUTING.md`
+are silently indexed (a line is appended automatically — no user notice). Files in a folder with no
+`ROUTING.md` yet are queued as a single digest entry per folder via the existing update-announcer
+pending-updates queue, surfaced once at the user's next session start.
