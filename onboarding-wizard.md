@@ -719,3 +719,86 @@ want in plain words, the way you did just now."
 
 If they're tired or done, don't push. Tell them these are all waiting
 whenever they want them, and end there.
+
+## 8. Set up Telegram (optional mobile access)
+
+This is a separate, optional add-on — not part of the required setup.
+Only offer it once section 7 feels done (they're not mid-task, not
+tired). Say something like: "One more thing, totally optional — I can
+also talk to you through Telegram on your phone, so you're not tied to
+this terminal window. Want to set that up now? Takes about five
+minutes." If they say no or "later," drop it — don't push, and don't
+bring it up again unless they ask.
+
+This runs entirely on **their own machine** (the one you're running on
+right now) — there is no separate server involved, and nothing to set up
+on any other computer.
+
+### 8a. Install Telegram
+
+Ask if they already have Telegram installed on their phone. If not,
+have them install it from their phone's app store (Telegram, by
+Telegram FZ-LLC / Telegram Messenger Inc. — free). If they don't already
+have a Telegram account, the app walks them through creating one with
+their phone number on first open; no need for you to narrate that part.
+
+### 8b. Create their bot via BotFather
+
+Talk them through this on their phone, inside the Telegram app itself:
+
+1. Have them search for **@BotFather** (the official bot, blue checkmark)
+   and open a chat with it.
+2. Have them send `/newbot`.
+3. BotFather asks for a **name** (display name, anything — e.g. "Frank's
+   Assistant") and then a **username** (must be unique and end in `bot`,
+   e.g. `frank_family_assistant_bot`). If the username's taken, have them
+   try a variation.
+4. BotFather replies with a **bot token** — a long string like
+   `123456789:AAExampleTokenTextGoesHere`. Have them copy it (tap to
+   copy in Telegram). Tell them: "Keep this private — anyone with this
+   token can control the bot." This is a one-time setup token, not
+   something they'll need to remember or retype later.
+
+Each family member needs their **own distinct bot** — never reuse a
+bot token across people, and never copy one person's `.env` wholesale
+onto another person's machine (platform credentials must be set by
+hand, per person, every time).
+
+### 8c. Get their Telegram user ID
+
+The allowlist needs their numeric Telegram user ID, not their username.
+Easiest path: have them message **@userinfobot** on Telegram (send any
+message, e.g. "hi") — it replies with their numeric ID. Have them copy
+that number.
+
+### 8d. Configure and install the gateway
+
+In their terminal, with them:
+
+1. Set the three values in their `~/.hermes/.env` (create the file if it
+   doesn't exist) — walk them through pasting in their own token and ID
+   from steps 8b/8c, not placeholders:
+   ```
+   TELEGRAM_BOT_TOKEN=<the token from BotFather>
+   TELEGRAM_ALLOWED_USERS=<their numeric user ID from 8c>
+   TELEGRAM_HOME_CHANNEL=telegram
+   ```
+2. Run `hermes gateway setup` and follow any interactive prompts it
+   shows for Telegram-specific config.
+3. Run `hermes gateway install` to register it as a persistent
+   background service so it keeps running (survives reboots/logout) —
+   they don't need to keep a terminal window open for it to work.
+
+### 8e. Test it
+
+Have them open a chat with their own bot on their phone (search for the
+username they picked in 8b) and send a message — anything, e.g. "hey,
+are you there?" Confirm they get a reply. If nothing comes back within
+a minute or two, don't guess — check `hermes gateway status` (or
+equivalent) with them and read what it says before troubleshooting
+further.
+
+Tell them: "That's it — now you can reach me from your phone anytime,
+same memory and same conversation abilities as here in the terminal.
+Only your account can talk to this bot; anyone else who somehow finds
+it gets silently ignored."
