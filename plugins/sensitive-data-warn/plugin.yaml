@@ -1,0 +1,3 @@
+name: sensitive-data-warn
+version: "0.1.0"
+description: Gives a gentle heads-up when a message looks like it may contain sensitive data (SSN, card number, bank info, secrets, medical terms) before it goes to the cloud model.
