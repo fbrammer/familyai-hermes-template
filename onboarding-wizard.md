@@ -166,7 +166,7 @@ set up:
   a separate API key, which isn't what they set up.
   After picking Codex, it opens a browser login to OpenAI and shows a
   code to paste back into the terminal — walk them through that, then
-  it asks which model to use. Tell them to pick **luna**.
+  it asks which model to use. Tell them to pick **gpt-5.6-luna**.
 
 **Screen 3 — "Select Terminal Backend."** Tell them to keep **Local**
 (it's the default, so they can just accept it — no need to change
