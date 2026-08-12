@@ -57,8 +57,29 @@ walk you through creating the account."
    for their own files is a separate, later session.)
 
 ### Basic git identity setup
-Once the account exists, have them set a git username and email locally,
-matching their new GitHub account:
+On Mac, before touching git, have them run:
+
+```
+xcode-select --install
+```
+
+This may pop up a window mentioning "Xcode" — reassure them they are
+**not** installing the full Xcode app (a many-gigabyte program for writing
+software). It's asking for one small separate piece called "Command Line
+Tools," a few hundred MB, which is just the plumbing git needs to work at
+all. Have them click **Install** and wait for it to finish (a few minutes,
+progress bar shown) before moving on. If nothing pops up, Command Line
+Tools is already installed — just continue.
+
+Do this as its own explicit step, not by letting the git config command
+below trigger it. If the CLT popup fires mid-git-config, that first
+`git config` invocation gets interrupted and silently does *not* set
+anything — the command exits without the identity being saved, and the
+verify step then comes back blank. Running `xcode-select --install`
+separately first means the git config commands only ever need to run once.
+
+Once the account exists (and, on Mac, CLT is installed), have them set a
+git username and email locally, matching their new GitHub account:
 
 ```
 git config --global user.name "Their Name"
@@ -71,7 +92,9 @@ you'll use for the Hermes install in the next section.
 
 **Verify**: run `git config --global user.name` and
 `git config --global user.email` and confirm both print a non-empty value
-before continuing.
+before continuing. If either comes back blank on a Mac, the most likely
+cause is the CLT popup interrupting the command — have them run the two
+`git config` lines again now that CLT has finished installing.
 
 ## 2. Install Hermes
 
@@ -143,7 +166,7 @@ set up:
   a separate API key, which isn't what they set up.
   After picking Codex, it opens a browser login to OpenAI and shows a
   code to paste back into the terminal — walk them through that, then
-  it asks which model to use. Tell them to pick **gpt-5.4-mini**.
+  it asks which model to use. Tell them to pick **luna**.
 
 **Screen 3 — "Select Terminal Backend."** Tell them to keep **Local**
 (it's the default, so they can just accept it — no need to change
@@ -474,6 +497,15 @@ If `hermes auth add anthropic` reaches the code-paste step but fails with
 `HTTP Error 404: Not Found` on token exchange, this is a known transient
 issue — retry the login once more before treating it as a real failure.
 
+**Privacy flag (Claude Pro/Max only):** this login is their consumer
+claude.ai account, not a billed API key — Anthropic's consumer terms allow
+using conversations to train future models (and retaining them up to 5
+years) when the "Help improve Claude" setting is on, unlike the API tier
+which never trains on data by default. Have them go to claude.ai →
+Settings → Privacy and turn "Help improve Claude" off, if they'd rather
+their family's conversations not be eligible for training. Not required,
+but worth surfacing as a real choice rather than a silent default.
+
 ### If no:
 Tell them that's fine — skip directly to section 5.
 
@@ -523,6 +555,13 @@ $10 unless you choose to use paid models later."
    and confirm the model name in the config matches a model OpenRouter
    currently offers for free. Do not proceed to 5b until this verification
    passes.
+6. **Privacy flag:** have them go to their OpenRouter account settings →
+   Privacy & Guardrails, and turn off "Enable paid endpoints that may
+   train on inputs," "Enable free endpoints that may train on inputs," and
+   "Enable free endpoints that may publish prompts." This is self-serve
+   (unlike OpenAI/Anthropic's enterprise-only Zero Data Retention) and
+   stops OpenRouter from routing their messages to any underlying provider
+   that trains on them. Free-tier reliability is unaffected.
 
 ### 5b. NVIDIA
 1. Have them go to NVIDIA's AI/NIM developer portal (build.nvidia.com) and
@@ -556,6 +595,16 @@ $10 unless you choose to use paid models later."
    stuck there — just have them come back to a normal prompt afterward
    and run the `hermes config set` command above manually.
 5. **Verify**: same test-prompt check as 5a/5b.
+6. **Privacy flag:** a free/unbilled Google AI Studio key is explicitly
+   eligible for Google to use in improving their products, per Google AI
+   Studio's terms — its free-tier language directly warns against
+   submitting sensitive or personal data on it. Enabling billing on the
+   same Google Cloud project (even without spending anything) moves the
+   key onto the paid-tier data policy, under which Google commits not to
+   train on prompts/responses. This is the one provider where "I have a
+   key" and "my data isn't used for training" are genuinely different
+   states — walk them through enabling billing here rather than treating
+   it as the same optional $10-reliability step as 5a/5b.
 
 Once all three verifications pass, tell the user: "You now have three
 backup AI providers set up, plus [their OAuth subscription, if connected].
