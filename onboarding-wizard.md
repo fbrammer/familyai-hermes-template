@@ -132,7 +132,9 @@ cause is the CLT popup interrupting the command — have them run the two
    `hermes` again.
 
 ### Verify (both platforms):
-Have them run:
+Have them close the terminal window completely and open a brand new one
+(not just a new tab), so it picks up everything from the install. Then
+have them run:
 ```
 hermes doctor
 ```
