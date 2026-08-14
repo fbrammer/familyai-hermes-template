@@ -454,7 +454,7 @@ real path; don't have the user type the placeholder.
    ```
 
    These two extra flags are required for skill/plugin updates (auto-journal,
-   the escalation-support plugin, etc.) to ever reach this machine — without
+   session-ledger, etc.) to ever reach this machine — without
    them, `refresher.py` silently skips its entire skills pass every single
    run (`"skills": null` in its own dry-run output is the tell) while the
    config-only refresh keeps working normally, so this is easy to miss.
