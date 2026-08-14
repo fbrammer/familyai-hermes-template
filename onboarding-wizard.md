@@ -230,7 +230,32 @@ it.
    run from, and a natural place for the user to keep files they hand to
    their assistant later.
 
-2. Create a launcher on their Desktop that moves to that folder, checks
+2. Create two symlinks so the workspace is easy to find without
+   navigating into `Documents`: one in their home folder, one on their
+   Desktop.
+
+   **Mac**:
+   ```bash
+   [ -e ~/AI ] || ln -s ~/Documents/AI ~/AI
+   [ -e ~/Desktop/AI ] || ln -s ~/Documents/AI ~/Desktop/AI
+   ```
+
+   **Windows** (PowerShell, run as the user — no admin needed for a
+   directory junction):
+   ```powershell
+   if (-not (Test-Path "$env:USERPROFILE\AI")) {
+     New-Item -ItemType Junction -Path "$env:USERPROFILE\AI" -Target "$env:USERPROFILE\Documents\AI"
+   }
+   if (-not (Test-Path "$env:USERPROFILE\Desktop\AI")) {
+     New-Item -ItemType Junction -Path "$env:USERPROFILE\Desktop\AI" -Target "$env:USERPROFILE\Documents\AI"
+   }
+   ```
+
+   The `[ -e ... ] ||` / `Test-Path` guards make this safe to re-run —
+   skip silently if a file or folder already exists at that name rather
+   than overwriting it.
+
+3. Create a launcher on their Desktop that moves to that folder, checks
    for updates, then starts Hermes — so from now on, starting Hermes is
    just "double-click the icon on your Desktop."
 
@@ -258,11 +283,11 @@ it.
    hermes
    ```
 
-3. From here on, tell them: "From now on, just double-click 'Start
+4. From here on, tell them: "From now on, just double-click 'Start
    Hermes' on your desktop to open me — it'll always start in the right
    place and keep itself up to date."
 
-4. For the rest of *this* session, since they're already in a terminal,
+5. For the rest of *this* session, since they're already in a terminal,
    just have them run `cd ~/Documents/AI` (or the Windows equivalent)
    directly rather than restarting via the launcher — no need to relaunch
    mid-wizard.
