@@ -435,7 +435,9 @@ real path; don't have the user type the placeholder.
    set -euo pipefail
    python3 "<HERMES_HOME>/scripts/refresher.py" \
      --hermes-home "<HERMES_HOME>" \
-     --manifest-url "https://raw.githubusercontent.com/fbrammer/familyai-hermes-template/main/manifest.json"
+     --manifest-url "https://raw.githubusercontent.com/fbrammer/familyai-hermes-template/main/manifest.json" \
+     --skills-manifest-url "https://raw.githubusercontent.com/fbrammer/familyai-hermes-template/main/skills-manifest.json" \
+     --skills-raw-base-url "https://raw.githubusercontent.com/fbrammer/familyai-hermes-template/main"
    ```
 
    Make it executable: `chmod +x <HERMES_HOME>/scripts/familyai-refresh.sh`.
@@ -446,8 +448,16 @@ real path; don't have the user type the placeholder.
    ```powershell
    python "<HERMES_HOME>\scripts\refresher.py" `
      --hermes-home "<HERMES_HOME>" `
-     --manifest-url "https://raw.githubusercontent.com/fbrammer/familyai-hermes-template/main/manifest.json"
+     --manifest-url "https://raw.githubusercontent.com/fbrammer/familyai-hermes-template/main/manifest.json" `
+     --skills-manifest-url "https://raw.githubusercontent.com/fbrammer/familyai-hermes-template/main/skills-manifest.json" `
+     --skills-raw-base-url "https://raw.githubusercontent.com/fbrammer/familyai-hermes-template/main"
    ```
+
+   These two extra flags are required for skill/plugin updates (auto-journal,
+   the escalation-support plugin, etc.) to ever reach this machine — without
+   them, `refresher.py` silently skips its entire skills pass every single
+   run (`"skills": null` in its own dry-run output is the tell) while the
+   config-only refresh keeps working normally, so this is easy to miss.
 
    Then register the job:
 
