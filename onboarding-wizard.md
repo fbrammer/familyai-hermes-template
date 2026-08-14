@@ -580,37 +580,9 @@ $10 unless you choose to use paid models later."
    If signup fails for that reason, tell them it's a known limitation, not
    something they did wrong.
 
-### 5c. Google/Gemini
-1. Have them go to Google AI Studio (aistudio.google.com) and sign up /
-   sign in with an existing Google account.
-2. Have them generate a Gemini API key.
-3. Same $10-credit suggestion, if Google's billing setup supports it for
-   this product.
-4. Have them set the key with:
-   ```
-   hermes config set GOOGLE_API_KEY their_key_here
-   ```
-   Note: if this comes up as one of Hermes's own live setup screens
-   (during `hermes setup`, rather than here in the wizard), it may send
-   them to aistudio.google.com without an obvious way to enter the key
-   back in that screen. If there's no inline paste field, don't get
-   stuck there — just have them come back to a normal prompt afterward
-   and run the `hermes config set` command above manually.
-5. **Verify**: same test-prompt check as 5a/5b.
-6. **Privacy flag:** a free/unbilled Google AI Studio key is explicitly
-   eligible for Google to use in improving their products, per Google AI
-   Studio's terms — its free-tier language directly warns against
-   submitting sensitive or personal data on it. Enabling billing on the
-   same Google Cloud project (even without spending anything) moves the
-   key onto the paid-tier data policy, under which Google commits not to
-   train on prompts/responses. This is the one provider where "I have a
-   key" and "my data isn't used for training" are genuinely different
-   states — walk them through enabling billing here rather than treating
-   it as the same optional $10-reliability step as 5a/5b.
-
-Once all three verifications pass, tell the user: "You now have three
-backup AI providers set up, plus [their OAuth subscription, if connected].
-If one ever stops working, Hermes will automatically try the next one."
+Once both verifications pass, tell the user: "You now have two backup AI
+providers set up, plus [their OAuth subscription, if connected]. If one
+ever stops working, Hermes will automatically try the next one."
 
 ## 5d. Quiet down automatic memory
 
@@ -644,8 +616,8 @@ whole thing off, just ask me."
 
 Summarize for the user what's now configured: their primary model (OAuth
 subscription if connected, otherwise "OpenRouter as primary"), plus the
-fallback chain (OpenRouter, NVIDIA, Gemini, in whichever order isn't
-already primary).
+fallback chain (OpenRouter, NVIDIA, in whichever order isn't already
+primary).
 
 Tell them: "The technical setup is done — I'm fully working now. Down the
 road, we can also set you up with a system for organizing your files and
