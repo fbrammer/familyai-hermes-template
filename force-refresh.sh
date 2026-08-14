@@ -6,6 +6,8 @@ set -euo pipefail
 
 HERMES_HOME="${1:-$HOME/.hermes}"
 MANIFEST_URL="https://raw.githubusercontent.com/fbrammer/familyai-hermes-template/main/manifest.json"
+SKILLS_MANIFEST_URL="https://raw.githubusercontent.com/fbrammer/familyai-hermes-template/main/skills-manifest.json"
+SKILLS_RAW_BASE_URL="https://raw.githubusercontent.com/fbrammer/familyai-hermes-template/main"
 MARKER_FILE="$HERMES_HOME/.familyai-template-synced-at"
 
 if [ ! -f "$HERMES_HOME/scripts/refresher.py" ]; then
@@ -19,11 +21,13 @@ echo '{"last_applied_exported_at": "1970-01-01T00:00:00Z", "consecutive_failures
 
 echo
 echo "-- Dry run --"
-python3 "$HERMES_HOME/scripts/refresher.py" --hermes-home "$HERMES_HOME" --manifest-url "$MANIFEST_URL" --dry-run
+python3 "$HERMES_HOME/scripts/refresher.py" --hermes-home "$HERMES_HOME" --manifest-url "$MANIFEST_URL" \
+  --skills-manifest-url "$SKILLS_MANIFEST_URL" --skills-raw-base-url "$SKILLS_RAW_BASE_URL" --dry-run
 
 echo
 echo "-- Applying for real --"
-python3 "$HERMES_HOME/scripts/refresher.py" --hermes-home "$HERMES_HOME" --manifest-url "$MANIFEST_URL"
+python3 "$HERMES_HOME/scripts/refresher.py" --hermes-home "$HERMES_HOME" --manifest-url "$MANIFEST_URL" \
+  --skills-manifest-url "$SKILLS_MANIFEST_URL" --skills-raw-base-url "$SKILLS_RAW_BASE_URL"
 
 echo
 echo "-- Verifying --"
