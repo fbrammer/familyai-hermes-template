@@ -122,7 +122,14 @@ def is_newer(candidate_exported_at: str, marker_exported_at: str) -> bool:
 
 
 def _default_http_get(url: str) -> bytes:  # pragma: no cover - real network
-    req = urllib.request.Request(url, headers={"User-Agent": "familyai-refresher"})
+    req = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": "familyai-refresher",
+            "Cache-Control": "no-cache",
+            "Pragma": "no-cache",
+        },
+    )
     with urllib.request.urlopen(req, timeout=15) as resp:
         return resp.read()
 
