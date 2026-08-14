@@ -1,0 +1,3 @@
+name: escalation-support
+version: "0.1.0"
+description: Lets a family member escalate a support question to Frank via the Phase 7 support agent, with explicit confirmation and local rate limiting.
