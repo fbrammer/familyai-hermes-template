@@ -10,8 +10,8 @@
       "kind": "skill"
     },
     "auto-journal": {
-      "version": "0.1.0",
-      "sha256": "711425e3e05f2792fdc5981bab189d4b2b12d953677fe58ccc1ca74e403a36ff",
+      "version": "0.2.0",
+      "sha256": "bcb0e2a799145176e35047d1a1e214a1f3d30409673e5ec533e64fd5f6ab0b14",
       "files": [
         "SKILL.md",
         "auto_journal.py"
@@ -64,5 +64,5 @@
       "kind": "plugin"
     }
   },
-  "exported_at": "2026-08-12T17:05:21Z"
+  "exported_at": "2026-08-14T15:25:33Z"
 }
