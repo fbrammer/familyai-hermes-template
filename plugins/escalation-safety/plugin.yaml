@@ -1,0 +1,3 @@
+name: escalation-safety
+version: "0.1.0"
+description: Shared topic-scope and cross-member-isolation checks used by both legs of the Phase 7 escalation relay (family-side and support-agent-side).
