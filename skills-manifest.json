@@ -39,6 +39,35 @@
       ],
       "kind": "skill"
     },
+    "escalation-safety": {
+      "version": "0.1.0",
+      "sha256": "3302bb5a68c1cb850a9482fa081839e7b886a93da394d708daf36c90a78f31c8",
+      "files": [
+        "SKILL.md",
+        "__init__.py",
+        "__pycache__/scope_filter.cpython-314.pyc",
+        "plugin.yaml",
+        "scope_filter.py"
+      ],
+      "kind": "plugin"
+    },
+    "escalation-support": {
+      "version": "0.1.0",
+      "sha256": "8db5f14ca41011bed1e01e76958344be68072c542a092173ae5482749b9e8f06",
+      "files": [
+        "SKILL.md",
+        "__init__.py",
+        "__pycache__/__init__.cpython-314.pyc",
+        "__pycache__/escalation_client.cpython-314.pyc",
+        "__pycache__/rate_limiter.cpython-314.pyc",
+        "__pycache__/trigger_detector.cpython-314.pyc",
+        "escalation_client.py",
+        "plugin.yaml",
+        "rate_limiter.py",
+        "trigger_detector.py"
+      ],
+      "kind": "plugin"
+    },
     "sensitive-data-warn": {
       "version": "0.1.0",
       "sha256": "2e0ce6ca0e41cdbea87ee54e83161d83f40600b9dc10621229b249618557c2de",
@@ -64,5 +93,5 @@
       "kind": "plugin"
     }
   },
-  "exported_at": "2026-08-14T15:25:33Z"
+  "exported_at": "2026-08-14T17:40:26Z"
 }
