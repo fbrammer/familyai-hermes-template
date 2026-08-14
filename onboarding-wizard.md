@@ -610,7 +610,9 @@ go — things like what we decided and what we did — so I can pick up where
 we left off next time, even across separate sessions. They live in a
 folder on your computer at `~/.hermes/familyai/journal/`, you never have
 to manage them, and if you ever want to see them, read them, or turn the
-whole thing off, just ask me."
+whole thing off, just ask me. Every so often, after a session where
+something real happened, I might ask if you want to add a note in your
+own words — that's always optional, and saying no is completely fine."
 
 ## 6. Wrap-up
 
