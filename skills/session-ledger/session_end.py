@@ -54,7 +54,7 @@ def finalize_session(session_id: str, journal_dir: Path, ledger_base_dir=None) -
         Exception: Any exception raised by `commit_before_compact` is propagated.
     """
     marker_dir = (
-        Path(ledger_base_dir) if ledger_base_dir else Path.home() / ".hermes" / "familyai"
+        Path(ledger_base_dir) if ledger_base_dir else Path.home() / "AI" / "Journal" / "state"
     )
     marker_path = marker_dir / "sessions" / f"{session_id}.finalized"
 
