@@ -6,7 +6,7 @@ description: >
   non-technical user never has to know when or how to compact or clear.
 requires:
   - session-ledger
-  - auto-journal
+  - session-log
 ---
 
 # auto-context-manage
@@ -20,7 +20,7 @@ conversation has clearly moved on to something unrelated and a full
 
 Never compacts mid-operation (an open, blocking piece of work always wins
 over a usage threshold). Before any compaction or clear, always commits
-any not-yet-journaled milestones through auto-journal first
+any not-yet-logged milestones through session-log first
 (`commit_before_compact`) -- durability before context loss, never the
 other way around. After compacting, rebuilds a carry-forward summary
 (active project, current goal, confirmed decisions, touched files, open
