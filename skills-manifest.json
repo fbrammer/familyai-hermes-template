@@ -42,8 +42,8 @@
       "whats_new": "Journal session state now uses the user-owned ~/AI/Journal/state/ location."
     },
     "familyai-workspace": {
-      "version": "0.2.0",
-      "sha256": "8ab63c9d0b38774c36f76a6b1e121413abd1f666bb829218d991fcd0020dda0f",
+      "version": "0.2.1",
+      "sha256": "2b64e9bc2d2040c8a8260af13f519905fbc2c7d659228d6f1bdf6905902d57b9",
       "files": [
         "SKILL.md",
         "__init__.py",
@@ -60,7 +60,7 @@
         "workspace_bootstrap.py"
       ],
       "kind": "plugin",
-      "whats_new": "Adds a minimal, user-preserving FileFolderMethod under ~/AI."
+      "whats_new": "Adds a minimal FileFolderMethod and keeps its files inside ~/AI."
     },
     "sensitive-data-warn": {
       "version": "0.1.0",
@@ -86,5 +86,5 @@
       "kind": "plugin"
     }
   },
-  "exported_at": "2026-08-16T01:17:55Z"
+  "exported_at": "2026-08-16T01:22:41Z"
 }
