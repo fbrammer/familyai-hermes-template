@@ -2,22 +2,12 @@
   "skills": {
     "auto-context-manage": {
       "version": "0.1.0",
-      "sha256": "2ce21f223362997ea8836871eeecd82c9a5830fd13e14cc546e80a3e22297280",
+      "sha256": "5a68c6b32cc84296bad8ae7aba02b0a1c19948232eece3b5faacb4140df64896",
       "files": [
         "SKILL.md",
         "auto_context_manage.py"
       ],
       "kind": "skill"
-    },
-    "auto-journal": {
-      "version": "0.2.1",
-      "sha256": "7037d9ab97bf5b0eab76c8de44a9a39844650420ca8a746900b6ba824265e9ba",
-      "files": [
-        "SKILL.md",
-        "auto_journal.py"
-      ],
-      "kind": "skill",
-      "whats_new": "Journal and session state now use the user-owned ~/AI/Journal/ location."
     },
     "project-index": {
       "version": "0.1.0",
@@ -31,7 +21,7 @@
     },
     "session-ledger": {
       "version": "0.1.1",
-      "sha256": "7e47b1070da09f0509f4d74d751552e9ec47ad9d4c1be0a695021b60a0567d4c",
+      "sha256": "c58c24d4b1fbe39fd0be4bbc278f2b2d0dc041e641e93fa46119c9caa0e88ce7",
       "files": [
         "SKILL.md",
         "ledger.py",
@@ -41,9 +31,20 @@
       "kind": "skill",
       "whats_new": "Journal session state now uses the user-owned ~/AI/Journal/state/ location."
     },
+    "session-log": {
+      "version": "0.3.0",
+      "sha256": "7008a3e0f185ec46a9cd63f915abcf92794b5fddf6749f606806e1a365543b28",
+      "files": [
+        "SKILL.md",
+        "auto_journal.py",
+        "journal_store.py"
+      ],
+      "kind": "skill",
+      "whats_new": ">"
+    },
     "familyai-workspace": {
-      "version": "0.2.1",
-      "sha256": "2b64e9bc2d2040c8a8260af13f519905fbc2c7d659228d6f1bdf6905902d57b9",
+      "version": "0.3.0",
+      "sha256": "319e4f0cdd189c703591f3ee7f3f31e12a066f2f269adeb29c261f6942f7349f",
       "files": [
         "SKILL.md",
         "__init__.py",
@@ -55,12 +56,13 @@
         "assets/file-folder-method/templates/AGENT.template.md",
         "assets/file-folder-method/templates/CLAUDE.template.md",
         "assets/file-folder-method/templates/ROUTING.template.md",
+        "familyai_workspace.py",
         "journal_store.py",
         "plugin.yaml",
         "workspace_bootstrap.py"
       ],
       "kind": "plugin",
-      "whats_new": "Adds a minimal FileFolderMethod and keeps its files inside ~/AI."
+      "whats_new": ">"
     },
     "sensitive-data-warn": {
       "version": "0.1.0",
@@ -86,5 +88,5 @@
       "kind": "plugin"
     }
   },
-  "exported_at": "2026-08-16T01:22:41Z"
+  "exported_at": "2026-08-16T19:00:38Z"
 }
