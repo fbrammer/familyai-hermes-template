@@ -10,13 +10,14 @@
       "kind": "skill"
     },
     "auto-journal": {
-      "version": "0.2.0",
-      "sha256": "bcb0e2a799145176e35047d1a1e214a1f3d30409673e5ec533e64fd5f6ab0b14",
+      "version": "0.2.1",
+      "sha256": "7037d9ab97bf5b0eab76c8de44a9a39844650420ca8a746900b6ba824265e9ba",
       "files": [
         "SKILL.md",
         "auto_journal.py"
       ],
-      "kind": "skill"
+      "kind": "skill",
+      "whats_new": "Journal and session state now use the user-owned ~/AI/Journal/ location."
     },
     "project-index": {
       "version": "0.1.0",
@@ -29,15 +30,30 @@
       "kind": "skill"
     },
     "session-ledger": {
-      "version": "0.1.0",
-      "sha256": "2e541b5602f785691a1fbb0d12924fcd11c6ba31adafd37d7aa7d84ab7868b1f",
+      "version": "0.1.1",
+      "sha256": "7e47b1070da09f0509f4d74d751552e9ec47ad9d4c1be0a695021b60a0567d4c",
       "files": [
         "SKILL.md",
         "ledger.py",
         "logging_helper.py",
         "session_end.py"
       ],
-      "kind": "skill"
+      "kind": "skill",
+      "whats_new": "Journal session state now uses the user-owned ~/AI/Journal/state/ location."
+    },
+    "familyai-workspace": {
+      "version": "0.1.0",
+      "sha256": "e9dad3bcc7c4ca61f24f03c3d1419139afa8815f51eba0970687e5916a9a0acb",
+      "files": [
+        "SKILL.md",
+        "__init__.py",
+        "assets/HOW_TO_JOURNAL.md",
+        "journal_store.py",
+        "plugin.yaml",
+        "workspace_bootstrap.py"
+      ],
+      "kind": "plugin",
+      "whats_new": "Journal and journal state now live under ~/AI and migrate silently during refresh."
     },
     "sensitive-data-warn": {
       "version": "0.1.0",
@@ -64,5 +80,5 @@
       "kind": "plugin"
     }
   },
-  "exported_at": "2026-08-14T20:52:19Z"
+  "exported_at": "2026-08-16T00:44:14Z"
 }
