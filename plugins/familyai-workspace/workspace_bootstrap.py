@@ -78,18 +78,33 @@ def _copy_legacy_state(old_state: Path, state: Path) -> None:
         shutil.copy2(old_reflect, new_reflect)
 
 
-def _seed_file(source: Path, target: Path) -> None:
+def _has_symlinked_ancestor(target: Path, root: Path) -> bool:
+    try:
+        target.relative_to(root)
+    except ValueError:
+        return True
+    parent = target.parent
+    while parent != root:
+        if parent.is_symlink():
+            return True
+        parent = parent.parent
+    return False
+
+
+def _seed_file(source: Path, target: Path, root: Path) -> None:
+    if _has_symlinked_ancestor(target, root):
+        return
     if target.exists() or target.is_symlink():
         return
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_bytes(source.read_bytes())
 
 
-def _install_root_guidance(source: Path, target: Path) -> None:
+def _install_root_guidance(source: Path, target: Path, root: Path) -> None:
     if target.is_symlink() or (target.exists() and not target.is_file()):
         return
     if not target.exists():
-        _seed_file(source, target)
+        _seed_file(source, target, root)
         return
     current = target.read_bytes()
     if _WORKSPACE_MARKER in current:
@@ -103,10 +118,10 @@ def _install_workspace_method(root: Path) -> None:
     for directory in ("Projects", "FILE-IN", "FILE-OUT"):
         (root / directory).mkdir(parents=True, exist_ok=True)
     for source_name, target_name in _ROOT_GUIDANCE_ASSETS.items():
-        _install_root_guidance(_WORKSPACE_ASSET_ROOT / source_name, root / target_name)
+        _install_root_guidance(_WORKSPACE_ASSET_ROOT / source_name, root / target_name, root)
     method = root / "FileFolderMethod"
     for source_name, target_name in _METHOD_ASSETS.items():
-        _seed_file(_WORKSPACE_ASSET_ROOT / source_name, method / target_name)
+        _seed_file(_WORKSPACE_ASSET_ROOT / source_name, method / target_name, root)
 
 
 def bootstrap(home: Path | None = None, old_state: Path | None = None) -> dict:
