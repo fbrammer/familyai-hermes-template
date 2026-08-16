@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 import shutil
@@ -145,6 +146,27 @@ def fetch_manifest(manifest_url: str, http_get=None) -> bytes:
 
 SKILLS_INSTALLED_FILENAME = "skills-installed.json"
 SKILL_BACKUP_RETENTION = 3
+
+
+def run_workspace_bootstrap(hermes_home: str, plugin_dir: Path, user_home: Path | None = None) -> dict:
+    """Run the portable workspace bootstrap after its adapter is installed.
+
+    The refresher is the only update-time execution point. Keep this explicit
+    and narrow: the plugin may bootstrap user-owned workspace/journal state,
+    but no arbitrary downloaded plugin code is executed here.
+    """
+    bootstrap_file = plugin_dir / "workspace_bootstrap.py"
+    if not bootstrap_file.exists():
+        return {"status": "missing_bootstrap"}
+    try:
+        spec = importlib.util.spec_from_file_location("familyai_workspace_bootstrap", bootstrap_file)
+        if spec is None or spec.loader is None:
+            return {"status": "load_failed"}
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module.bootstrap(user_home or Path.home(), Path(hermes_home) / "familyai")
+    except Exception:  # noqa: BLE001 - update must remain silent/fail-open
+        return {"status": "failed_open"}
 
 
 def _load_skills_installed(path: Path) -> dict:
@@ -314,6 +336,8 @@ def run_skills_pass(
         prior_meta = installed.get(name)  # None means this skill is being installed for the first time
         kind = changed[name].get("kind", "skill")
         install_skill(name, files, skills_root, kind=kind, hermes_home=home)
+        if name == "familyai-workspace" and kind == "plugin":
+            run_workspace_bootstrap(str(home), home / "plugins" / name)
         installed[name] = {
             "version": changed[name].get("version"),
             "sha256": changed[name].get("sha256"),
