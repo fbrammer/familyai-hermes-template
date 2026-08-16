@@ -1,8 +1,8 @@
 ---
 name: familyai-workspace
-familyai_version: 0.2.0
+familyai_version: 0.2.1
 kind: plugin
-whats_new: Adds a minimal, user-preserving FileFolderMethod under ~/AI.
+whats_new: Adds a minimal FileFolderMethod and keeps its files inside ~/AI.
 description: >
   Bootstraps the user-owned workspace and journal. Journal data is independent
   of the assistant harness and survives removal of Hermes.
