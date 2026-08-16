@@ -3,7 +3,7 @@ name: session-ledger
 familyai_version: 0.1.1
 whats_new: Journal session state now uses the user-owned ~/AI/Journal/state/ location.
 description: >
-  Shared, append-only event ledger that the auto-journal,
+  Shared, append-only event ledger that the session-log,
   auto-context-manage, and project-index skills are built on. Not
   user-facing on its own -- installed alongside the other three so their
   imports resolve.
