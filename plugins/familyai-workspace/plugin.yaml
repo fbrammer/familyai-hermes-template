@@ -1,0 +1,3 @@
+name: familyai-workspace
+version: "0.1.0"
+description: Bootstraps the user-owned ~/AI workspace and journal without making journal data depend on Hermes.
