@@ -1,6 +1,7 @@
 ---
 name: auto-journal
-familyai_version: 0.2.0
+familyai_version: 0.2.1
+whats_new: Journal and session state now use the user-owned ~/AI/Journal/ location.
 description: >
   Silently keeps a running journal of what was decided and done, so a
   non-technical user never has to remember to log anything themselves.
@@ -17,7 +18,7 @@ requires:
 Watches the session ledger for milestone-shaped events -- a decision the
 user actually confirmed, a completed and verified piece of work, a
 resolved routing decision -- and writes one journal entry per milestone to
-`~/.hermes/familyai/journal/JOURNAL.md`, with a machine-readable footer in
+`~/AI/Journal/`, with a machine-readable footer in
 an `index.jsonl` alongside it.
 
 Entries are immutable: a later correction never edits or deletes a prior
