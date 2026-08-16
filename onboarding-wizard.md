@@ -225,29 +225,38 @@ later in this wizard, like merging documents, work better from a clean
 folder). Set up a dedicated workspace and a one-click way to launch into
 it.
 
-1. Create a workspace folder: `~/Documents/AI` (Mac) or
-   `%USERPROFILE%\Documents\AI` (Windows). This is where Hermes will
-   run from, and a natural place for the user to keep files they hand to
-   their assistant later.
+The workspace root is `~/AI` (Mac) or `%USERPROFILE%\AI` (Windows) — a
+real folder, not a symlink. `~/Documents/AI` and `~/Desktop/AI` are links
+*into* it, so the user can find it from either familiar spot without
+duplicating anything. (This is the reverse of an earlier version of this
+step, which made `~/Documents/AI` the real folder — the `familyai-workspace`
+plugin's bootstrap now expects `~/AI` itself to be real, and will migrate
+an existing `~/Documents/AI`-real layout automatically and silently on
+first run if it finds one, so re-running this step on an already-onboarded
+machine is still safe.)
 
-2. Create two symlinks so the workspace is easy to find without
-   navigating into `Documents`: one in their home folder, one on their
-   Desktop.
+1. Create the workspace folder: `~/AI` (Mac) or `%USERPROFILE%\AI`
+   (Windows). This is where Hermes will run from, and a natural place for
+   the user to keep files they hand to their assistant later.
+
+2. Create two links so the workspace is also reachable from the familiar
+   spots — one under Documents, one on the Desktop — without duplicating
+   its contents.
 
    **Mac**:
    ```bash
-   [ -e ~/AI ] || ln -s ~/Documents/AI ~/AI
-   [ -e ~/Desktop/AI ] || ln -s ~/Documents/AI ~/Desktop/AI
+   [ -e ~/Documents/AI ] || ln -s ~/AI ~/Documents/AI
+   [ -e ~/Desktop/AI ] || ln -s ~/AI ~/Desktop/AI
    ```
 
    **Windows** (PowerShell, run as the user — no admin needed for a
    directory junction):
    ```powershell
-   if (-not (Test-Path "$env:USERPROFILE\AI")) {
-     New-Item -ItemType Junction -Path "$env:USERPROFILE\AI" -Target "$env:USERPROFILE\Documents\AI"
+   if (-not (Test-Path "$env:USERPROFILE\Documents\AI")) {
+     New-Item -ItemType Junction -Path "$env:USERPROFILE\Documents\AI" -Target "$env:USERPROFILE\AI"
    }
    if (-not (Test-Path "$env:USERPROFILE\Desktop\AI")) {
-     New-Item -ItemType Junction -Path "$env:USERPROFILE\Desktop\AI" -Target "$env:USERPROFILE\Documents\AI"
+     New-Item -ItemType Junction -Path "$env:USERPROFILE\Desktop\AI" -Target "$env:USERPROFILE\AI"
    }
    ```
 
@@ -262,7 +271,7 @@ it.
    **Mac** — create `~/Desktop/Start Hermes.command` containing:
    ```bash
    #!/usr/bin/env bash
-   cd ~/Documents/AI
+   cd ~/AI
    hermes update
    hermes
    ```
@@ -278,7 +287,7 @@ it.
    containing:
    ```bat
    @echo off
-   cd /d "%USERPROFILE%\Documents\AI"
+   cd /d "%USERPROFILE%\AI"
    hermes update
    hermes
    ```
@@ -288,7 +297,7 @@ it.
    place and keep itself up to date."
 
 5. For the rest of *this* session, since they're already in a terminal,
-   just have them run `cd ~/Documents/AI` (or the Windows equivalent)
+   just have them run `cd ~/AI` (or the Windows equivalent)
    directly rather than restarting via the launcher — no need to relaunch
    mid-wizard.
 
@@ -453,7 +462,7 @@ real path; don't have the user type the placeholder.
      --skills-raw-base-url "https://raw.githubusercontent.com/fbrammer/familyai-hermes-template/main"
    ```
 
-   These two extra flags are required for skill/plugin updates (auto-journal,
+   These two extra flags are required for skill/plugin updates (session-log,
    session-ledger, etc.) to ever reach this machine — without
    them, `refresher.py` silently skips its entire skills pass every single
    run (`"skills": null` in its own dry-run output is the tell) while the
@@ -643,11 +652,16 @@ chat notification, nothing about how memory itself works.
 Also mention, in the same breath: "I also keep my own working notes as we
 go — things like what we decided and what we did — so I can pick up where
 we left off next time, even across separate sessions. They live in a
-folder on your computer at `~/.hermes/familyai/journal/`, you never have
-to manage them, and if you ever want to see them, read them, or turn the
+folder on your computer under `~/AI/Journal/state/`, you never have to
+manage them, and if you ever want to see them, read them, or turn the
 whole thing off, just ask me. Every so often, after a session where
 something real happened, I might ask if you want to add a note in your
 own words — that's always optional, and saying no is completely fine."
+
+And separately: "Any time *you* want a written record of what we worked
+on — not my silent working notes, an actual entry in your own journal —
+just say `journal` (or 'write a journal entry') and I'll write it up and
+file it for you at `~/AI/Journal/`."
 
 ## 6. Wrap-up
 
