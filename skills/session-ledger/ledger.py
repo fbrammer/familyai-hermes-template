@@ -111,7 +111,7 @@ def append_event(
         raise ValueError(f"Invalid EventKind: {kind}")
 
     if base_dir is None:
-        base_dir = pathlib.Path.home() / ".hermes" / "familyai"
+        base_dir = pathlib.Path.home() / "AI" / "Journal" / "state"
     else:
         base_dir = pathlib.Path(base_dir)
 
@@ -145,7 +145,7 @@ def read_session(
     base_dir: Optional[pathlib.Path] = None,
 ) -> List[Dict[str, Any]]:
     if base_dir is None:
-        base_dir = pathlib.Path.home() / ".hermes" / "familyai"
+        base_dir = pathlib.Path.home() / "AI" / "Journal" / "state"
     else:
         base_dir = pathlib.Path(base_dir)
 
