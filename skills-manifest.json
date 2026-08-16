@@ -42,26 +42,32 @@
       "whats_new": "Journal session state now uses the user-owned ~/AI/Journal/state/ location."
     },
     "familyai-workspace": {
-      "version": "0.1.0",
-      "sha256": "e9dad3bcc7c4ca61f24f03c3d1419139afa8815f51eba0970687e5916a9a0acb",
+      "version": "0.2.0",
+      "sha256": "8ab63c9d0b38774c36f76a6b1e121413abd1f666bb829218d991fcd0020dda0f",
       "files": [
         "SKILL.md",
         "__init__.py",
         "assets/HOW_TO_JOURNAL.md",
+        "assets/file-folder-method/AGENT.template.md",
+        "assets/file-folder-method/CLAUDE.template.md",
+        "assets/file-folder-method/README.md",
+        "assets/file-folder-method/ROUTING.template.md",
+        "assets/file-folder-method/templates/AGENT.template.md",
+        "assets/file-folder-method/templates/CLAUDE.template.md",
+        "assets/file-folder-method/templates/ROUTING.template.md",
         "journal_store.py",
         "plugin.yaml",
         "workspace_bootstrap.py"
       ],
       "kind": "plugin",
-      "whats_new": "Journal and journal state now live under ~/AI and migrate silently during refresh."
+      "whats_new": "Adds a minimal, user-preserving FileFolderMethod under ~/AI."
     },
     "sensitive-data-warn": {
       "version": "0.1.0",
-      "sha256": "2e0ce6ca0e41cdbea87ee54e83161d83f40600b9dc10621229b249618557c2de",
+      "sha256": "caa942be0a4f16c5d91fe679f9f7bd7fb29809be8d3bc54568451a0f5a909806",
       "files": [
         "SKILL.md",
         "__init__.py",
-        "__pycache__/detector.cpython-314.pyc",
         "detector.py",
         "plugin.yaml"
       ],
@@ -80,5 +86,5 @@
       "kind": "plugin"
     }
   },
-  "exported_at": "2026-08-16T00:44:14Z"
+  "exported_at": "2026-08-16T01:17:55Z"
 }
